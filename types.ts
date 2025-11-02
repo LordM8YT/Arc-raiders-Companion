@@ -1,4 +1,4 @@
-// Fix: Import ComponentType to resolve the 'Cannot find namespace React' error.
+
 import type { ComponentType } from 'react';
 
 export interface Quest {
@@ -7,6 +7,8 @@ export interface Quest {
   description: string;
   status: 'incomplete' | 'complete';
   faction: 'Iron Assembly' | 'Free Rangers' | 'ARC';
+  objectives: string[];
+  rewards: string[];
 }
 
 export interface Equipment {
@@ -15,12 +17,13 @@ export interface Equipment {
   name: string;
   description: string;
   rarity: 'Common' | 'Uncommon' | 'Rare' | 'Epic';
+  stats?: Record<string, string | number>;
 }
 
 export interface Build {
   id: number;
   name: string;
-  class: 'Assault' | 'Recon' | 'Support';
+  raider: 'Celeste' | 'Isabel' | 'Lance';
   description: string;
   equipment: Equipment[];
 }

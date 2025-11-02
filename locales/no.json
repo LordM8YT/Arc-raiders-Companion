@@ -1,0 +1,70 @@
+
+{
+  "welcome": {
+    "title": "ARC RAIDERS FØLGESVENN",
+    "subtitle": "Ditt alt-i-ett verktøy for oppdrag, builds og ferdigheter.",
+    "enter": "Gå inn i Hub"
+  },
+  "header": {
+    "title": "ARC RAIDERS FØLGESVENN",
+    "skilltree": "Ferdighetstre",
+    "builds": "Builds",
+    "quests": "Oppdrag"
+  },
+  "quests": {
+    "title": "Oppdragslogg",
+    "inProgress": "Pågående",
+    "completed": "Fullført",
+    "objectives": "Mål",
+    "rewards": "Belønninger",
+    "completeButton": "Fullfør",
+    "undoButton": "Angre",
+    "syncButton": "Synkroniser med Spillet",
+    "syncingButton": "Synkroniserer...",
+    "syncSuccess": "Oppdragslogg oppdatert!",
+    "syncAllComplete": "Alle oppdrag er fullført!",
+    "noQuests": "Ingen aktive oppdrag.",
+    "contributeButton": "Bidra med data",
+    "contributeSuccess": "Takk! '{filename}' er sendt til vurdering."
+  },
+  "builds": {
+    "title": "Builds Database",
+    "availableBuilds": "Tilgjengelige Builds",
+    "equipmentLoadout": "Utstyrsliste",
+    "analyzeButton": "Få Gemini-analyse",
+    "analyzingButton": "Analyserer...",
+    "analysisError": "Kunne ikke hente analyse fra Gemini. Vennligst prøv igjen senere.",
+    "analysisTitle": "Gemini Build-analyse",
+    "selectBuildPrompt": "Velg en build for å se detaljer.",
+    "stats": {
+      "damage": "Skade",
+      "rpm": "Skuddtakt",
+      "magazine": "Magasin",
+      "range": "Rekkevidde"
+    },
+    "contributeButton": "Bidra med en Build",
+    "contributeSuccess": "Takk! '{filename}' er sendt til vurdering."
+  },
+  "skillTree": {
+    "title": "Ferdighetstre-planlegger",
+    "skillPoints": "Ferdighetspoeng",
+    "resetButton": "Tilbakestill tre",
+    "hoverPrompt": "Hold over en ferdighet for detaljer",
+    "unlearnError": "Kan ikke fjerne ferdighet: andre ferdigheter avhenger av den.",
+    "syncButton": "Synkroniser med Spillet",
+    "syncingButton": "Synkroniserer...",
+    "syncSuccess": "Fikk {points} ferdighetspoeng!",
+    "contributeButton": "Bidra med data",
+    "contributeSuccess": "Takk! '{filename}' er sendt til vurdering."
+  },
+  "gemini": {
+    "prompt": {
+      "intro": "Du er en ekspertanalytiker og theorycrafter for det sci-fi-kooperative skytespillet \"Arc Raiders\".\nAnalyser følgende spiller-build og gi tilbakemelding på dens styrker, svakheter og potensielle synergier med andre spillerklasser.\nHold analysen din konsis, strukturert, og gi handlingsrettede råd. Bruk markdown for formatering.",
+      "buildName": "Build-navn:",
+      "raider": "Raider:",
+      "description": "Beskrivelse:",
+      "equipment": "Utstyrsliste:",
+      "analysisHeader": "Vennligst gi din analyse nedenfor:"
+    }
+  }
+}

@@ -1,0 +1,70 @@
+
+{
+  "welcome": {
+    "title": "ARC RAIDERS COMPANION",
+    "subtitle": "Your all-in-one tool for quests, builds, and skills.",
+    "enter": "Enter Hub"
+  },
+  "header": {
+    "title": "ARC RAIDERS COMPANION",
+    "skilltree": "Skill Tree",
+    "builds": "Builds",
+    "quests": "Quests"
+  },
+  "quests": {
+    "title": "Quest Log",
+    "inProgress": "In Progress",
+    "completed": "Completed",
+    "objectives": "Objectives",
+    "rewards": "Rewards",
+    "completeButton": "Complete",
+    "undoButton": "Undo",
+    "syncButton": "Sync with Game",
+    "syncingButton": "Syncing...",
+    "syncSuccess": "Quest log updated!",
+    "syncAllComplete": "All quests are complete!",
+    "noQuests": "No active quests.",
+    "contributeButton": "Contribute Data",
+    "contributeSuccess": "Thanks! '{filename}' submitted for review."
+  },
+  "builds": {
+    "title": "Builds Database",
+    "availableBuilds": "Available Builds",
+    "equipmentLoadout": "Equipment Loadout",
+    "analyzeButton": "Get Gemini Analysis",
+    "analyzingButton": "Analyzing...",
+    "analysisError": "Failed to get analysis from Gemini. Please try again later.",
+    "analysisTitle": "Gemini Build Analysis",
+    "selectBuildPrompt": "Select a build to see details.",
+    "stats": {
+      "damage": "Damage",
+      "rpm": "RPM",
+      "magazine": "Magazine",
+      "range": "Range"
+    },
+    "contributeButton": "Contribute a Build",
+    "contributeSuccess": "Thanks! '{filename}' submitted for review."
+  },
+  "skillTree": {
+    "title": "Skill Tree Planner",
+    "skillPoints": "Skill Points",
+    "resetButton": "Reset Tree",
+    "hoverPrompt": "Hover over a skill for details",
+    "unlearnError": "Cannot unlearn skill: other skills depend on it.",
+    "syncButton": "Sync with Game",
+    "syncingButton": "Syncing...",
+    "syncSuccess": "Gained {points} skill points!",
+    "contributeButton": "Contribute Data",
+    "contributeSuccess": "Thanks! '{filename}' submitted for review."
+  },
+  "gemini": {
+    "prompt": {
+      "intro": "You are an expert analyst and theorycrafter for the sci-fi cooperative shooter \"Arc Raiders\".\nAnalyze the following player build and provide feedback on its strengths, weaknesses, and potential synergies with other player classes.\nKeep your analysis concise, structured, and provide actionable advice. Use markdown for formatting.",
+      "buildName": "Build Name:",
+      "raider": "Raider:",
+      "description": "Description:",
+      "equipment": "Equipment Loadout:",
+      "analysisHeader": "Please provide your analysis below:"
+    }
+  }
+}

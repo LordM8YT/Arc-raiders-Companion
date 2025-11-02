@@ -4,11 +4,17 @@ import Header from './components/Header';
 import QuestTracker from './components/QuestTracker';
 import BuildsViewer from './components/BuildsViewer';
 import SkillTreePlanner from './components/SkillTreePlanner';
+import Welcome from './components/Welcome';
 
-type View = 'quests' | 'builds' | 'skilltree';
+export type View = 'quests' | 'builds' | 'skilltree';
 
 const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<View>('skilltree');
+  const [showWelcome, setShowWelcome] = useState(true);
+
+  if (showWelcome) {
+    return <Welcome onEnter={() => setShowWelcome(false)} />;
+  }
 
   const renderView = () => {
     switch (currentView) {
@@ -24,13 +30,11 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-100 bg-cover bg-center" style={{backgroundImage: "url('https://picsum.photos/1920/1080?grayscale&blur=5')"}}>
-      <div className="min-h-screen bg-black bg-opacity-70 backdrop-blur-sm">
-        <Header currentView={currentView} setCurrentView={setCurrentView} />
-        <main className="p-4 md:p-8">
-          {renderView()}
-        </main>
-      </div>
+    <div className="min-h-screen hex-background text-[var(--color-text-primary)]">
+      <Header currentView={currentView} setCurrentView={setCurrentView} />
+      <main className="p-4 md:p-8">
+        {renderView()}
+      </main>
     </div>
   );
 };

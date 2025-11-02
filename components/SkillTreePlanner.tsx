@@ -1,7 +1,9 @@
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef } from 'react';
 import type { Skill } from '../types';
 import { mockSkillTree } from '../data/mockData';
+import { useI18n } from '../i18n/I18nContext';
+import { UploadIcon } from './icons';
 
 const SkillNode: React.FC<{
   skill: Skill;
@@ -12,18 +14,18 @@ const SkillNode: React.FC<{
 }> = ({ skill, isUnlocked, isAvailable, onClick, onHover }) => {
   const Icon = skill.icon;
 
-  let nodeClasses = 'w-16 h-16 rounded-full flex items-center justify-center cursor-pointer transform transition-all duration-300 hover:scale-110 ';
+  let nodeClasses = 'w-16 h-16 rounded-full flex items-center justify-center cursor-pointer transform transition-all duration-300 hover:scale-110 border-2 ';
   let iconClasses = 'w-8 h-8 transition-colors duration-300 ';
 
   if (isUnlocked) {
-    nodeClasses += 'bg-cyan-500 border-2 border-cyan-300 shadow-lg shadow-cyan-500/50';
-    iconClasses += 'text-white';
+    nodeClasses += 'bg-[var(--color-primary)] border-[var(--color-primary)] shadow-lg shadow-[var(--color-primary)]/50';
+    iconClasses += 'text-black';
   } else if (isAvailable) {
-    nodeClasses += 'bg-gray-600 border-2 border-cyan-400 animate-pulse';
-    iconClasses += 'text-cyan-300';
+    nodeClasses += 'bg-[var(--color-surface)] border-[var(--color-primary)] animate-pulse';
+    iconClasses += 'text-[var(--color-primary)]';
   } else {
-    nodeClasses += 'bg-gray-800 border-2 border-gray-600 cursor-not-allowed';
-    iconClasses += 'text-gray-500';
+    nodeClasses += 'bg-black/30 border-[var(--color-border)] cursor-not-allowed';
+    iconClasses += 'text-[var(--color-text-secondary)]';
   }
 
   return (
@@ -45,15 +47,20 @@ const SkillNode: React.FC<{
 };
 
 const SkillTreePlanner: React.FC = () => {
-  const TOTAL_POINTS = 20;
+  const [totalPoints, setTotalPoints] = useState(20);
   const [unlockedSkills, setUnlockedSkills] = useState<Set<string>>(new Set());
   const [hoveredSkill, setHoveredSkill] = useState<Skill | null>(null);
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [syncMessage, setSyncMessage] = useState('');
+  const [contributionMessage, setContributionMessage] = useState('');
+  const { t } = useI18n();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const pointsSpent = unlockedSkills.size;
 
   const handleSkillClick = (skill: Skill) => {
     const isUnlocked = unlockedSkills.has(skill.id);
-    const isAvailable = (pointsSpent < TOTAL_POINTS) && (!skill.prereq || unlockedSkills.has(skill.prereq));
+    const isAvailable = (pointsSpent < totalPoints) && (!skill.prereq || unlockedSkills.has(skill.prereq));
     
     if (!isUnlocked && isAvailable) {
       const newUnlocked = new Set(unlockedSkills);
@@ -67,10 +74,45 @@ const SkillTreePlanner: React.FC = () => {
             newUnlocked.delete(skill.id);
             setUnlockedSkills(newUnlocked);
         } else {
-            alert("Cannot unlearn skill: other skills depend on it.")
+            alert(t('skillTree.unlearnError'));
         }
     }
   };
+  
+  const handleSync = () => {
+    setIsSyncing(true);
+    setSyncMessage('');
+    const pointsGained = Math.floor(Math.random() * 2) + 1; // Gain 1 or 2 points
+    setTimeout(() => {
+        setTotalPoints(prev => prev + pointsGained);
+        setSyncMessage(t('skillTree.syncSuccess', { points: pointsGained }));
+        setIsSyncing(false);
+        setTimeout(() => setSyncMessage(''), 3000);
+    }, 2000);
+  };
+  
+  const handleContributeClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const content = e.target?.result;
+        console.log(`--- Community Contribution: Skill Tree ---`);
+        console.log(`Filename: ${file.name}`);
+        console.log('Content:', content);
+        console.log(`----------------------------------------`);
+        setContributionMessage(t('skillTree.contributeSuccess', { filename: file.name }));
+        setTimeout(() => setContributionMessage(''), 4000);
+      };
+      reader.readAsText(file);
+    }
+    event.target.value = '';
+  };
+
 
   const handleReset = () => {
     setUnlockedSkills(new Set());
@@ -84,29 +126,50 @@ const SkillTreePlanner: React.FC = () => {
 
   return (
     <div className="container mx-auto">
-      <h2 className="text-3xl font-bold text-center mb-4 text-cyan-300 font-orbitron">Skill Tree Planner</h2>
+      <h2 className="text-3xl font-bold text-center mb-4 text-[var(--color-primary)] font-orbitron">{t('skillTree.title')}</h2>
       <div className="flex flex-col md:flex-row gap-8">
         {/* Left Panel: Info & Controls */}
         <div className="w-full md:w-1/4 lg:w-1/5 order-2 md:order-1">
-          <div className="bg-gray-800 bg-opacity-70 p-4 rounded-lg border border-gray-700 sticky top-24">
+          <div className="terminal-card p-4 rounded-lg sticky top-24">
             <div className="text-center mb-4">
-              <p className="text-lg font-orbitron">Skill Points</p>
-              <p className="text-4xl font-bold text-cyan-400">{TOTAL_POINTS - pointsSpent} <span className="text-lg text-gray-400">/ {TOTAL_POINTS}</span></p>
+              <p className="text-lg font-orbitron">{t('skillTree.skillPoints')}</p>
+              <p className="text-4xl font-bold text-[var(--color-primary)]">{totalPoints - pointsSpent} <span className="text-lg text-[var(--color-text-secondary)]">/ {totalPoints}</span></p>
             </div>
-            <button
-              onClick={handleReset}
-              className="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-2 px-4 rounded-lg transition-colors font-orbitron"
-            >
-              Reset Tree
-            </button>
-            <div className="mt-6 h-48 p-3 bg-gray-900/50 rounded-md border border-gray-600 overflow-y-auto">
+            <div className="space-y-2">
+                <input type="file" ref={fileInputRef} onChange={handleFileChange} accept=".json,.txt" className="hidden" />
+                <button
+                    onClick={handleContributeClick}
+                    className="w-full bg-gray-600 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-lg transition-colors flex items-center justify-center space-x-2 font-orbitron"
+                >
+                    <UploadIcon className="h-5 w-5" />
+                    <span>{t('skillTree.contributeButton')}</span>
+                </button>
+                <button
+                    onClick={handleSync}
+                    disabled={isSyncing}
+                    className="w-full bg-purple-600 hover:bg-purple-500 disabled:bg-purple-800 disabled:cursor-not-allowed text-white font-bold py-2 px-4 rounded-lg transition-colors flex items-center justify-center space-x-2 font-orbitron"
+                >
+                    {isSyncing && <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>}
+                    <span>{isSyncing ? t('skillTree.syncingButton') : t('skillTree.syncButton')}</span>
+                </button>
+                 <button
+                    onClick={handleReset}
+                    className="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-2 px-4 rounded-lg transition-colors font-orbitron"
+                >
+                    {t('skillTree.resetButton')}
+                </button>
+            </div>
+             {syncMessage && <div className="text-center mt-2 text-sm text-purple-300">{syncMessage}</div>}
+             {contributionMessage && <div className="text-center mt-2 text-sm text-green-300">{contributionMessage}</div>}
+
+            <div className="mt-6 h-48 p-3 bg-black/30 rounded-md border border-[var(--color-border)] overflow-y-auto">
               {hoveredSkill ? (
                 <div>
-                  <h4 className="text-lg font-bold text-cyan-400">{hoveredSkill.name}</h4>
-                  <p className="text-sm text-gray-300 mt-1">{hoveredSkill.description}</p>
+                  <h4 className="text-lg font-bold text-[var(--color-primary)]">{hoveredSkill.name}</h4>
+                  <p className="text-sm text-[var(--color-text-primary)] mt-1">{hoveredSkill.description}</p>
                 </div>
               ) : (
-                <p className="text-gray-500 text-center pt-16">Hover over a skill for details</p>
+                <p className="text-[var(--color-text-secondary)] text-center pt-16">{t('skillTree.hoverPrompt')}</p>
               )}
             </div>
           </div>
@@ -114,7 +177,7 @@ const SkillTreePlanner: React.FC = () => {
 
         {/* Right Panel: Skill Tree */}
         <div className="w-full md:w-3/4 lg:w-4/5 order-1 md:order-2">
-            <div className="relative w-full aspect-video bg-gray-800 bg-opacity-50 rounded-lg border-2 border-gray-700 overflow-hidden">
+            <div className="relative w-full aspect-video terminal-card rounded-lg overflow-hidden hex-background">
                 <svg className="absolute w-full h-full" style={{ zIndex: 0 }}>
                     <defs>
                         <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
@@ -136,7 +199,7 @@ const SkillTreePlanner: React.FC = () => {
                             y1={`${prereqCoords.y}%`}
                             x2={`${selfCoords.x}%`}
                             y2={`${selfCoords.y}%`}
-                            stroke={isPathUnlocked ? '#22D3EE' : '#4A5568'}
+                            stroke={isPathUnlocked ? 'var(--color-primary)' : 'var(--color-border)'}
                             strokeWidth="2"
                             className="transition-all duration-300"
                         />
@@ -146,7 +209,7 @@ const SkillTreePlanner: React.FC = () => {
                 <div className="relative w-full h-full z-10">
                     {mockSkillTree.map(skill => {
                         const isUnlocked = unlockedSkills.has(skill.id);
-                        const isAvailable = (pointsSpent < TOTAL_POINTS) && (!skill.prereq || unlockedSkills.has(skill.prereq));
+                        const isAvailable = (pointsSpent < totalPoints) && (!skill.prereq || unlockedSkills.has(skill.prereq));
                         return (
                         <SkillNode
                             key={skill.id}
